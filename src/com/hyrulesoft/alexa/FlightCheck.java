@@ -210,7 +210,7 @@ public class FlightCheck implements Speechlet {
 		// SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
 		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
-		formatter.setTimeZone(TimeZone.getTimeZone(timezone));
+		formatter.setTimeZone(TimeZone.getTimeZone(timezone.substring(1)));
 		String time = formatter.format(date);
 		return time;
 	}
