@@ -66,7 +66,7 @@ public class FlightCheck implements Speechlet {
 			log.info("FlightNum = " + FlightNum.getValue());
 
 			try {
-				if(FlightNum.getValue()==null || Airline.getValue()==null)
+				if(FlightNum.getValue()==null || Airline.getValue()==null || FlightNum.getValue().equals("?") || Airline.getValue().equals("?"))
 					return SpeechletResponse.newTellResponse(speech);
 				else
 					return getNewCheckFlightResponse(Airline, FlightNum);
