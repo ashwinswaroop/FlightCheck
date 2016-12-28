@@ -36,6 +36,6 @@ public final class FlightCheckSpeechletRequestStreamHandler extends SpeechletReq
 	}
 
 	public FlightCheckSpeechletRequestStreamHandler() {
-		super(new FlightCheck(), supportedApplicationIds);
+		super(new FlightCheckSpeechlet(), supportedApplicationIds);
 	}
 }

@@ -29,8 +29,8 @@ import com.amazon.speech.ui.SimpleCard;
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONObject;
 
-public class FlightCheck implements Speechlet {
-	private static final Logger log = LoggerFactory.getLogger(FlightCheck.class);
+public class FlightCheckSpeechlet implements Speechlet {
+	private static final Logger log = LoggerFactory.getLogger(FlightCheckSpeechlet.class);
 
 	@Override
 	public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
