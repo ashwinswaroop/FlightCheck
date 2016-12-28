@@ -32,10 +32,6 @@ import com.amazonaws.util.json.JSONObject;
 public class FlightCheck implements Speechlet {
 	private static final Logger log = LoggerFactory.getLogger(FlightCheck.class);
 
-	/**
-	 * Array containing space facts.
-	 */
-
 	@Override
 	public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
 		log.info("onSessionStarted requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
@@ -53,34 +49,32 @@ public class FlightCheck implements Speechlet {
 
 		Intent intent = request.getIntent();
 		String intentName = (intent != null) ? intent.getName() : null;
-		Slot Airline = null;
-		Slot FlightNum = null;
+		Slot airline = null;
+		Slot flightNum = null;
 		String speechText = "Invalid Flight Number or Airline Name";
 		PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
 		speech.setText(speechText);
 
 		if ("CheckFlight".equals(intentName)) {
 
-			Airline = intent.getSlot("Airline");
-			FlightNum = intent.getSlot("FlightNum");
-			log.info("FlightNum = " + FlightNum.getValue());
+			airline = intent.getSlot("Airline");
+			flightNum = intent.getSlot("FlightNum");
+			log.info("FlightNum = " + flightNum.getValue());
 
 			try {
-				if(FlightNum.getValue()==null || Airline.getValue()==null || FlightNum.getValue().equals("?") || Airline.getValue().equals("?"))
+				if(flightNum.getValue()==null || airline.getValue()==null ||
+				   flightNum.getValue().equals("?") || airline.getValue().equals("?"))
 					return SpeechletResponse.newTellResponse(speech);
 				else
-					return getNewCheckFlightResponse(Airline, FlightNum);
+					return getNewCheckFlightResponse(airline, flightNum);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (com.amazonaws.util.json.JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			throw new SpeechletException("Something went wrong");	
 
-		}
-		else if ("AMAZON.HelpIntent".equals(intentName)) {
+		} else if ("AMAZON.HelpIntent".equals(intentName)) {
             return getHelpResponse();
 
         } else if ("AMAZON.StopIntent".equals(intentName)) {
@@ -93,7 +87,7 @@ public class FlightCheck implements Speechlet {
             outputSpeech.setText("Goodbye");
 
             return SpeechletResponse.newTellResponse(outputSpeech);
-        }else {
+        } else {
         	return SpeechletResponse.newTellResponse(speech);
 		}
 	}
@@ -118,7 +112,7 @@ public class FlightCheck implements Speechlet {
 		String arrivalTime = getArrivalTime(Airline.getValue(), FlightNum.getValue());
 		
 		
-		if(arrivalTime == null)
+		if (arrivalTime == null)
 			speechText = "Airline or flight does not exist";
 		else
 			speechText = "Your flight is scheduled to arrive at " + arrivalTime + " local time";
@@ -176,7 +170,7 @@ public class FlightCheck implements Speechlet {
 			}
 
 		}
-		if(airlineCode == null)
+		if (airlineCode == null)
 			return null;
 		String userPassword = "swarooprao:baf818d30d41d7670790c4112afd40501b4329fd";
 		String encoding = new String(Base64.encodeBase64(userPassword.getBytes()));
@@ -198,7 +192,7 @@ public class FlightCheck implements Speechlet {
 		String faFlightID = obj.getJSONObject("InFlightInfoResult").getString("faFlightID");
 		String airportID = obj.getJSONObject("InFlightInfoResult").getString("destination");
 		
-		if(faFlightID ==null || airportID == null)
+		if (faFlightID ==null || airportID == null)
 			return null;
 
 		URL url2 = new URL("http://flightxml.flightaware.com/json/FlightXML2/AirportInfo?airportCode=" + airportID);
@@ -217,7 +211,7 @@ public class FlightCheck implements Speechlet {
 		String timezone = obj.getJSONObject("AirportInfoResult").getString("timezone");
 		System.out.println(timezone);
 		
-		if(timezone==null)
+		if (timezone==null)
 			return null;
 
 		URL url = new URL("http://flightxml.flightaware.com/json/FlightXML2/FlightInfoEx?ident=" + faFlightID);
@@ -237,7 +231,7 @@ public class FlightCheck implements Speechlet {
 		String a = obj.getJSONObject("FlightInfoExResult").getJSONArray("flights").getJSONObject(0)
 				.getString("estimatedarrivaltime");
 		System.out.println(a);
-		if(a==null)
+		if (a == null)
 			return null;
 		Date date = new Date(Long.parseLong(a) * 1000);
 		// SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
